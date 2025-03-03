@@ -1,0 +1,51 @@
+UseCase UC1_CML_Editing {
+    actor = "Plugin User"
+    interactions = 
+        "recognize" a "SyntaxError",
+        "recognize" a "CmlKeyword",
+        "collapse" a "CmlDefinitionBlock",
+        "expand" a "CmlDefinitionBlock",
+        "see" a "HoverDocumentation",
+        "see" a "CmlOutline",
+        "navigate to" a "CmlDefinitionBlock",
+        "see" a "CmlDefinitionOccurrence",
+        "rename" a "CmlElement",
+        "apply" a "QuickFix" with its "MissingBoundedContext", "UserStorySplit",
+        "format" a "CmlFile",
+        "see suggestions for" a "CmlKeyword"
+    benefit = "I am able to conveniently edit CML files in my IDE"
+}
+
+UseCase UC2_CML_Generators {
+    actor = "Plugin User"
+    interactions = 
+        "generate" a "VisualContextMap",
+
+        "generate" a "PlantUmlComponentDiagram",
+        "generate" a "PlantUmlClassDiagram",
+        "generate" a "PlantUmlStateDiagram",
+        "generate" a "PlantUmlUseCaseDiagram",
+        "generate" a "PlantUmlStakeholderMap",
+        "generate" a "PlantUmlValueImpactMap",
+
+        "generate" a "SketchMinerDiagram",
+        "generate" a "MDSLContract",
+        "generate" a "ServiceCutterDiagram",
+        "apply" a "FreeMakerTemplate"
+    benefit = "I am able to generate additional resources from my CML definitions"
+}
+
+UseCase UC3_CML_Refactorings {
+    actor = "Plugin User"
+    interactions =
+        "split" an "Aggregate",
+        "split" a "BoundedContext",
+        "extract" an "Aggregate",
+        "merge" an "Aggregate",
+        "merge" a "BoundedContext",
+        "extract" a "SharedKernel",
+        "suspend" a "Partnership",
+        "convert" a "SharedKernel" to a "Partnership",
+        "convert" a "Partnership" to a "SharedKernel"
+    benefit = "I am able to easily restructure my CML definitions"
+}
