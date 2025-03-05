@@ -18,6 +18,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # required since test report action uses git
+      - name: Configure Git Safe Directory
+        run: |
+          REPO_NAME=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f2)
+          git config --global --add safe.directory "/__w/$REPO_NAME/$REPO_NAME"
+
       - name: Plugin Linting
         run: ./gradlew ktlintCheck
 
