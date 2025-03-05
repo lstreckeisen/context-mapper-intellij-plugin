@@ -1,0 +1,31 @@
+name: IntelliJ Plugin Build
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: gradle:jdk23-corretto
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Plugin Linting
+        run: ./gradlew ktlintCheck
+
+      - name: Plugin Tests
+        run: ./gradlew test
+
+      - name: Plugin Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Plugin Test Results
+          path: build/test-results/test/TEST-*.xml
+          reporter: java-junit
+
+      - name: Build plugin
+        run: ./gradlew buildPlugin
