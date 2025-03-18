@@ -1,0 +1,36 @@
+UseCase UC1_CML_Editing {
+    actor = "ContextMapper User"
+    interactions = 
+        "recognize" a "SyntaxError",
+        "recognize" a "CmlKeyword",
+        "collapse" a "CmlDefinitionBlock",
+        "expand" a "CmlDefinitionBlock",
+        "see" a "HoverDocumentation",
+        "see" a "CmlOutline",
+        "navigate to" a "CmlDefinitionBlock",
+        "see" a "CmlDefinitionOccurrence",
+        "rename" a "CmlElement",
+        "format" a "CmlFile",
+        "see suggestions for" a "CmlKeyword"
+    benefit = "I am able to conveniently edit CML files in my IDE"
+}
+
+UseCase UC2_CML_QuickFix {
+    actor = "ContextMapper User"
+    interactions = 
+        "create" a "MissingBoundedContext",
+        "split" a "UserStory"
+    benefit = "I am able to fix small mistakes in my CML definition"
+}
+
+UseCase UC3_CML_Generate_ContextMap {
+    actor = "ContextMapper User"
+    interactions = "generate" a "VisualContextMap"
+    benefit = "I am able to create a context map diagram from my CML context map"
+}
+
+UseCase UC4_CML_Generate_PlantUML {
+    actor = "ContextMapper User"
+    interactions = "generate" a "PlantUmlDiagram"
+    benefit = "I am able to create visual representations of my CML definitions"
+}

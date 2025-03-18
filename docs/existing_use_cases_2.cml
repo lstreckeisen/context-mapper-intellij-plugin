@@ -1,0 +1,52 @@
+UseCase UC5_CML_Generate_SketchMiner {
+    actor = "ContextMapper User"
+    interactions = "generate" a "SketchMinerDiagram"
+    benefit = "I am able to create a BPMN diagram from my process flow definitions"
+}
+
+UseCase UC6_CML_Generate_MDSLContract {
+    actor = "ContextMapper User"
+    interactions = "generate" a "MDSLContract"
+    benefit = "I am able to create an MDSL contract from my CML definitions"
+}
+
+UseCase UC7_CML_ServiceCutter {
+    actor = "ContextMapper User"
+    interactions =
+        "create" a "ServiceCutterConfiguration",
+        "generate" a "ServiceCutterDiagram"
+    benefit = "I am able to create ServiceCutter diagrams so I can visually see my service cuts"
+}
+
+UseCase UC8_CML_FreeMaker {
+    actor = "ContextMapper User"
+    interactions = "apply" a "FreeMakerTemplate"
+    benefit = "I am able to create my own files, e.g. Markdown, from my CML definitions"
+}
+
+UseCase UC9_CML_Refactorings {
+    actor = "ContextMapper User"
+    interactions =
+        "split" an "Aggregate",
+        "split" a "BoundedContext",
+        "extract" an "Aggregate",
+        "merge" an "Aggregate",
+        "merge" a "BoundedContext",
+        "extract" a "SharedKernel",
+        "suspend" a "Partnership",
+        "convert" a "SharedKernel" to a "Partnership",
+        "convert" a "Partnership" to a "SharedKernel"
+    benefit = "I am able to easily restructure my CML definitions"
+}
+
+UseCase UC10_CML_Discovery {
+    actor = "ContextMapper User"
+    interactions = "discover" a "ContextMapperDefintion" for "my existing project"
+    benefit = "I am able to get CML defintions for my existing project"
+}
+
+UseCase U11_CML_Validators {
+    actor = "ContextMapper User"
+    interactions = "validate" a "CMLFile"
+    benefit = "I am able to validate my CML files for their semantic correctness"
+}
