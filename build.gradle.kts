@@ -1,56 +1,109 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.3.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 }
 
-group = "org.contextmapper.dsl"
-version = "1.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2024.1.7")
-    type.set("IC") // Target IDE Platform
+val cmlVersion: String by project
 
-    // Plugin Dependencies
-    plugins.set(listOf())
+configurations {
+    create("cmlLsp")
 }
 
-tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity("2024.1.7")
+
+        plugins("com.redhat.devtools.lsp4ij:0.11.0")
     }
 
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
-    }
+    "cmlLsp" ("org.contextmapper:context-mapper-lsp:$cmlVersion@tar")
 
-    withType<Test> {
-        reports {
-            junitXml.required.set(true)
+    implementation(files(layout.buildDirectory.dir("lsp")))
+}
+
+intellijPlatform {
+    projectName = project.name
+
+    pluginConfiguration {
+        id = "org.contextmapper.intellij"
+        name = "ContextMapper"
+        version = "0.1.0"
+        description = "Context Mapper plugin for IntelliJ"
+
+        productDescriptor {
+        }
+
+        ideaVersion {
+            sinceBuild = "241"
+            untilBuild = "243.*"
+        }
+
+        vendor {
+            name = "ContextMapper"
+            url = "https://contextmapper.org"
         }
     }
 
-    patchPluginXml {
-        sinceBuild.set("241")
-        untilBuild.set("243.*")
+    signing {
+        certificateChain = System.getenv("CERTIFICATE_CHAIN")
+        privateKey = System.getenv("PRIVATE_KEY")
+        password = System.getenv("PRIVATE_KEY_PASSWORD")
     }
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+    publishing {
+        token = System.getenv("PUBLISH_TOKEN")
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+tasks {
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+    val copyLanguageServer by registering(Copy::class) {
+        description = "Extracts and copies the ContextMapper Language Server to the build directory"
+        group = "build"
+
+        from(tarTree(configurations.getByName("cmlLSPTar").singleFile)) {
+            eachFile {
+                relativePath = relativePath.parent.let { parent ->
+                    RelativePath(
+                        true,
+                        *parent.segments.drop(1).toTypedArray(),
+                        name
+                    )
+                }
+            }
+        }
+        into(layout.buildDirectory.dir("lsp/lsp"))
     }
+
+    buildPlugin {
+        dependsOn(copyLanguageServer)
+    }
+
+    /*withType<Test> {
+        reports {
+            junitXml.required.set(true)
+        }
+    }*/
 }

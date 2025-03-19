@@ -1,4 +1,4 @@
-package org.contextmapper.dsl.intellij
+package org.contextmapper.intellij
 
 import org.junit.Test
 
