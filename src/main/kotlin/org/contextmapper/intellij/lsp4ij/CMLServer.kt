@@ -13,9 +13,10 @@ class CMLServer : OSProcessStreamConnectionProvider() {
         val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("org.contextmapper.intellij"))
         requireNotNull(pluginDescriptor) { "Could not find Context Mapper plugin descriptor!" }
 
-        val lspResourcePath = pluginDescriptor.pluginPath.resolve("lib/lsp/bin/context-mapper-lsp")
-            .toAbsolutePath()
-            .toString()
+        val lspResourcePath =
+            pluginDescriptor.pluginPath.resolve("lib/lsp/bin/context-mapper-lsp")
+                .toAbsolutePath()
+                .toString()
 
         logger.debug("Language server executable: $lspResourcePath")
 

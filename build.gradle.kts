@@ -85,13 +85,12 @@ tasks {
 
         from(tarTree(configurations.getByName("cmlLSPTar").singleFile)) {
             eachFile {
-                relativePath = relativePath.parent.let { parent ->
+                relativePath =
                     RelativePath(
                         true,
-                        *parent.segments.drop(1).toTypedArray(),
-                        name
+                        *relativePath.parent.segments.drop(1).toTypedArray(),
+                        name,
                     )
-                }
             }
         }
         into(layout.buildDirectory.dir("lsp/lsp"))
