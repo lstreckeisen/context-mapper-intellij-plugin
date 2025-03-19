@@ -15,7 +15,7 @@ class CMLFileType : LanguageFileType(CMLLanguage.INSTANCE) {
         return "ContextMapper language file"
     }
 
-    @Suppress("UnstableApiUsage")   // NlsSafe is used by interface
+    @Suppress("UnstableApiUsage") // NlsSafe is used by interface
     override fun getDefaultExtension(): @NlsSafe String {
         return "cml"
     }
