@@ -35,6 +35,7 @@ dependencies {
     implementation(files(layout.buildDirectory.dir("lsp")))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
 }
 
 intellijPlatform {
@@ -105,9 +106,12 @@ tasks {
         dependsOn(copyLanguageServer)
     }
 
-    /*withType<Test> {
+    test {
+        useJUnitPlatform()
+
         reports {
-            junitXml.required.set(true)
+            junitXml.required = true
+            html.required = false
         }
-    }*/
+    }
 }
