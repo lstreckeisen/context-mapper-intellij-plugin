@@ -15,15 +15,18 @@ class CMLFileType : LanguageFileType(CMLLanguage.INSTANCE) {
         return "ContextMapper language file"
     }
 
+    @Suppress("UnstableApiUsage")   // NlsSafe is used by interface
     override fun getDefaultExtension(): @NlsSafe String {
         return "cml"
     }
 
-    override fun getIcon(): Icon? {
+    override fun getIcon(): Icon {
         return CMLIcons.FILE
     }
 
     companion object {
+        @JvmField
+        @Suppress("Unused") // required for plugin.xml
         val INSTANCE = CMLFileType()
     }
 }

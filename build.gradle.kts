@@ -83,7 +83,7 @@ tasks {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
         group = "build"
 
-        from(tarTree(configurations.getByName("cmlLSPTar").singleFile)) {
+        from(tarTree(configurations.getByName("cmlLsp").singleFile)) {
             eachFile {
                 relativePath =
                     RelativePath(
@@ -96,7 +96,7 @@ tasks {
         into(layout.buildDirectory.dir("lsp/lsp"))
     }
 
-    buildPlugin {
+    prepareSandbox {
         dependsOn(copyLanguageServer)
     }
 
