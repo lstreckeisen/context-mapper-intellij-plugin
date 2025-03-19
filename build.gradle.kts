@@ -15,10 +15,6 @@ repositories {
     }
 }
 
-val cmlVersion: String by project
-val lsp4ijVersion = "0.11.0"
-val jUnitVersion = "5.8.2"
-
 configurations {
     create("cmlLsp")
 }
@@ -27,15 +23,16 @@ dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2024.1.7")
 
-        plugins("com.redhat.devtools.lsp4ij:$lsp4ijVersion")
+        plugins("com.redhat.devtools.lsp4ij:${property("lsp4ijVersion")}")
     }
 
-    "cmlLsp"("org.contextmapper:context-mapper-lsp:$cmlVersion@tar")
+    "cmlLsp"("org.contextmapper:context-mapper-lsp:${property("cmlVersion")}@tar")
 
     implementation(files(layout.buildDirectory.dir("lsp")))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("jUnitVersion")}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("jUnitVersion")}")
+    testImplementation("io.mockk:mockk:${property("mockkVersion")}")
 }
 
 intellijPlatform {
