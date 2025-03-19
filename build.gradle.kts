@@ -44,7 +44,6 @@ intellijPlatform {
         id = "org.contextmapper.intellij"
         name = "ContextMapper"
         version = "0.1.0"
-        description = "Context Mapper plugin for IntelliJ"
 
         productDescriptor {
         }
@@ -92,7 +91,9 @@ tasks {
                 relativePath =
                     RelativePath(
                         true,
-                        *relativePath.parent.segments.drop(1).toTypedArray(),
+                        *relativePath.parent.segments
+                            .drop(1)
+                            .toTypedArray(),
                         name,
                     )
             }
