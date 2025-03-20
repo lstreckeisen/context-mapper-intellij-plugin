@@ -8,6 +8,7 @@ src-gen
 
 ### IntelliJ IDEA ###
 .idea/
+.intellijPlatform/
 *.iws
 *.iml
 *.ipr
