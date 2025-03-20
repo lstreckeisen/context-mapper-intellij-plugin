@@ -11,7 +11,7 @@ import org.apache.commons.lang3.SystemUtils
 private const val PLUGIN_ID = "org.contextmapper.intellij"
 
 class CMLServerFactory : LanguageServerFactory {
-    override fun createConnectionProvider(p0: Project): StreamConnectionProvider {
+    override fun createConnectionProvider(project: Project): StreamConnectionProvider {
         val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))
         requireNotNull(pluginDescriptor) { "Could not find Context Mapper plugin descriptor!" }
 
