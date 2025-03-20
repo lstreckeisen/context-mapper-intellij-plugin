@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -5,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.intellij.platform") version "2.3.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
+    id("org.jetbrains.changelog") version "2.2.1"
 }
 
 repositories {
@@ -39,7 +41,7 @@ intellijPlatform {
     projectName = project.name
 
     pluginConfiguration {
-        id = "org.contextmapper.intellij"
+        id = "org.contextmapper.intellij-plugin"
         name = "ContextMapper"
         version = "0.1.0"
 
@@ -55,6 +57,21 @@ intellijPlatform {
             name = "ContextMapper"
             url = "https://contextmapper.org"
         }
+
+        // From https://github.com/redhat-developer/intellij-quarkus/blob/main/build.gradle.kts
+        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+        description =
+            providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+                val start = "<!-- Plugin description -->"
+                val end = "<!-- Plugin description end -->"
+
+                with(it.lines()) {
+                    if (!containsAll(listOf(start, end))) {
+                        throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                    }
+                    subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
+                }
+            }
     }
 
     signing {
@@ -80,6 +97,11 @@ tasks {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    /**
+     * inspired by:
+     * - https://github.com/ContextMapper/vscode-extension/blob/master/build.gradle#L100
+     * - https://github.com/redhat-developer/intellij-quarkus/blob/main/build.gradle.kts
+     */
     val copyLanguageServer by registering(Copy::class) {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
         group = "build"
