@@ -23,7 +23,7 @@ configurations {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2024.1.7")
+        intellijIdeaCommunity(property("intelliJVersion") as String)
 
         plugins("com.redhat.devtools.lsp4ij:${property("lsp4ijVersion")}")
     }
@@ -49,8 +49,8 @@ intellijPlatform {
         }
 
         ideaVersion {
-            sinceBuild = "241"
-            untilBuild = "243.*"
+            sinceBuild = property("ideaSinceBuild") as String
+            untilBuild = property("ideaUntilBuild") as String
         }
 
         vendor {
