@@ -15,6 +15,7 @@ src-gen
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.docs/out
 
 ### Eclipse ###
 .apt_generated
