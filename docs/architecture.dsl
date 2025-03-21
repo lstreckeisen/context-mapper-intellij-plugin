@@ -15,25 +15,20 @@ workspace "ContextMapper IntelliJ Plugin" {
             editor = container "IntelliJ Editor" "IntelliJ's text editor" {
                 tag "External"
             }
-        }
-        lsp = softwareSystem "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" {
-            tag "Maintained"
+            lsp = container "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" {
+                tag "Maintained"
+            }
         }
 
-        pluginUser -> intelliJ.cmPlugin "uses"
+        pluginUser -> intelliJ.editor "uses"
         intelliJ.cmPlugin -> intelliJ.lsp4ij "configures"
         intelliJ.cmPlugin -> intelliJ.editor "extends"
         intelliJ.lsp4ij -> intelliJ.editor "integrates with"
-        intelliJ.lsp4ij -> lsp "communicates with"
-        lsp -> intelliJ.lsp4ij "provides editor services"
+        intelliJ.lsp4ij -> intelliJ.lsp "communicates with"
+        intelliJ.lsp -> intelliJ.lsp4ij "provides editor services"
     }
 
     views {
-        systemContext intelliJ "ContextDiagram" {
-            include *
-            autolayout lr
-        }
-
         container intelliJ "ContainerDiagram" {
             include *
             autolayout lr
