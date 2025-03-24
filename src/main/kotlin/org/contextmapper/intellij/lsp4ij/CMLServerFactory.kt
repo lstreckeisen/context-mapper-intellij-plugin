@@ -8,7 +8,7 @@ import com.redhat.devtools.lsp4ij.client.LanguageClientImpl
 import com.redhat.devtools.lsp4ij.server.StreamConnectionProvider
 import org.apache.commons.lang3.SystemUtils
 
-private const val PLUGIN_ID = "org.contextmapper.intellij"
+private const val PLUGIN_ID = "org.contextmapper.intellij-plugin"
 
 class CMLServerFactory : LanguageServerFactory {
     override fun createConnectionProvider(project: Project): StreamConnectionProvider {
