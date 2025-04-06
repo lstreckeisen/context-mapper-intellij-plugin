@@ -8,6 +8,7 @@ permissions:
   contents: read
   actions: read
   checks: write
+  packages: read
 
 jobs:
   build:
@@ -23,6 +24,11 @@ jobs:
         run: |
           REPO_NAME=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f2)
           git config --global --add safe.directory "/__w/$REPO_NAME/$REPO_NAME"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Plugin Linting
         run: ./gradlew ktlintCheck
