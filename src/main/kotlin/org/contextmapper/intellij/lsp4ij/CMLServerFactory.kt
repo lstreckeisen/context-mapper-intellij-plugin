@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project
 import com.redhat.devtools.lsp4ij.LanguageServerFactory
 import com.redhat.devtools.lsp4ij.client.LanguageClientImpl
 import com.redhat.devtools.lsp4ij.server.StreamConnectionProvider
-import org.apache.commons.lang3.SystemUtils
 
 private const val PLUGIN_ID = "org.contextmapper.intellij-plugin"
 
@@ -15,7 +14,7 @@ class CMLServerFactory : LanguageServerFactory {
         val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))
         requireNotNull(pluginDescriptor) { "Could not find Context Mapper plugin descriptor!" }
 
-        return CMLServer(pluginDescriptor, SystemUtils.IS_OS_WINDOWS)
+        return CMLServer(pluginDescriptor)
     }
 
     override fun createLanguageClient(project: Project): LanguageClientImpl = CMLClient(project)

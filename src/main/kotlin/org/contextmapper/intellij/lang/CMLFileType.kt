@@ -7,22 +7,14 @@ import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
 class CMLFileType : LanguageFileType(CMLLanguage.INSTANCE) {
-    override fun getName(): @NonNls String {
-        return "CML File"
-    }
+    override fun getName(): @NonNls String = "Context Mapper DSL File"
 
-    override fun getDescription(): @NlsContexts.Label String {
-        return "ContextMapper language file"
-    }
+    override fun getDescription(): @NlsContexts.Label String = "Context Mapper DSL file"
 
     @Suppress("UnstableApiUsage") // NlsSafe is used by interface
-    override fun getDefaultExtension(): @NlsSafe String {
-        return "cml"
-    }
+    override fun getDefaultExtension(): @NlsSafe String = "cml"
 
-    override fun getIcon(): Icon {
-        return CMLIcons.FILE
-    }
+    override fun getIcon(): Icon = CMLIcons.FILE
 
     companion object {
         @JvmField
