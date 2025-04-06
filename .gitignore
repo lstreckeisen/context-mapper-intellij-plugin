@@ -5,6 +5,8 @@ build/
 !**/src/test/**/build/
 
 src-gen
+lsp/*-lock.json
+lsp/node_modules
 
 ### IntelliJ IDEA ###
 .idea/
