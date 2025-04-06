@@ -29,6 +29,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: https://npm.pkg.github.com
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          always-auth: true
 
       - name: Plugin Linting
         run: ./gradlew ktlintCheck
