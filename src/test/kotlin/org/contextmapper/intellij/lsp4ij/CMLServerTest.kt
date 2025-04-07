@@ -14,7 +14,7 @@ class CMLServerTest {
 
         assertEquals(
             "/tmp/test/lib/lsp/index.cjs",
-            cmlServer.commandLine.exePath,
+            cmlServer.commandLine.parametersList.get(0),
         )
     }
 
