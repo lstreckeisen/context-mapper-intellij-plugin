@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://npm.pkg.github.com
-          token: '${{ secrets.NPM_TOKEN }}'
+          token: ${{ secrets.NPM_TOKEN }}
           always-auth: true
 
       - name: Plugin Linting
