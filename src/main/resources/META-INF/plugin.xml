@@ -18,10 +18,10 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="CML File"
+        <fileType name="Context Mapper DSL File"
                   implementationClass="org.contextmapper.intellij.lang.CMLFileType"
                   fieldName="INSTANCE"
-                  language="CML"
+                  language="Context Mapper DSL"
                   extensions="cml"
         />
     </extensions>
@@ -39,9 +39,6 @@
             </description>
         </server>
 
-        <languageMapping language="CML"
-                         serverId="cml-language-server"
-                         languageId="cml"
-        />
+        <languageMapping language="Context Mapper DSL" serverId="cml-language-server"/>
     </extensions>
 </idea-plugin>

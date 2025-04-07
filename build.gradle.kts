@@ -4,12 +4,19 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij.platform") version "2.3.0"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.changelog") version "2.2.1"
+    id("com.github.node-gradle.node") version "7.1.0"
+}
+
+node {
+    download.set(false)
+    nodeProjectDir.set(layout.projectDirectory.dir("lsp"))
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 
     intellijPlatform {
@@ -17,24 +24,25 @@ repositories {
     }
 }
 
-configurations {
-    create("cmlLsp")
-}
+val cmlVersion = property("cmlVersion") as String
+val lsp4ijVersion = property("lsp4ijVersion") as String
+val jUnitVersion = property("jUnitVersion") as String
+val mockkVersion = property("mockkVersion") as String
 
 dependencies {
     intellijPlatform {
         intellijIdeaCommunity(property("intelliJVersion") as String)
 
-        plugins("com.redhat.devtools.lsp4ij:${property("lsp4ijVersion")}")
+        plugins("com.redhat.devtools.lsp4ij:$lsp4ijVersion")
     }
-
-    "cmlLsp"("org.contextmapper:context-mapper-lsp:${property("cmlVersion")}@tar")
 
     implementation(files(layout.buildDirectory.dir("lsp")))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("jUnitVersion")}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("jUnitVersion")}")
-    testImplementation("io.mockk:mockk:${property("mockkVersion")}")
+    implementation("org.contextmapper:context-mapper-dsl:$cmlVersion")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 intellijPlatform {
@@ -105,23 +113,13 @@ tasks {
     val copyLanguageServer by registering(Copy::class) {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
         group = "build"
+        dependsOn(npmInstall)
 
-        from(tarTree(configurations.getByName("cmlLsp").singleFile)) {
-            eachFile {
-                relativePath =
-                    RelativePath(
-                        true,
-                        *relativePath.parent.segments
-                            .drop(1)
-                            .toTypedArray(),
-                        name,
-                    )
-            }
-        }
+        from(layout.projectDirectory.dir("lsp/node_modules/@lstreckeisen/context-mapper-language-server/cml-ls"))
         into(layout.buildDirectory.dir("lsp/lsp"))
     }
 
-    prepareSandbox {
+    compileJava {
         dependsOn(copyLanguageServer)
     }
 
@@ -132,5 +130,10 @@ tasks {
             junitXml.required = true
             html.required = false
         }
+    }
+
+    clean {
+        delete(layout.projectDirectory.dir("lsp/node_modules"))
+        delete(layout.projectDirectory.file("lsp/package-lock.json"))
     }
 }

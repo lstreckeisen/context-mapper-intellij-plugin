@@ -24,6 +24,15 @@ jobs:
           REPO_NAME=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f2)
           git config --global --add safe.directory "/__w/$REPO_NAME/$REPO_NAME"
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create .npmrc
+        working-directory: lsp
+        run: echo -e "@lstreckeisen:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+
       - name: Plugin Linting
         run: ./gradlew ktlintCheck
 

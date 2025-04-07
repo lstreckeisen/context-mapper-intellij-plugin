@@ -1,0 +1,7 @@
+{
+  "name": "context-mapper-intellij-plugin",
+  "private": true,
+  "dependencies": {
+    "@lstreckeisen/context-mapper-language-server": "0.0.1"
+  }
+}
