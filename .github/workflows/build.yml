@@ -28,9 +28,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: https://npm.pkg.github.com
-          token: ${{ secrets.NPM_TOKEN }}
-          always-auth: true
+
+      - name: Create .npmrc
+        working-directory: lsp
+        run: echo -e "@lstreckeisen:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
 
       - name: Plugin Linting
         run: ./gradlew ktlintCheck
