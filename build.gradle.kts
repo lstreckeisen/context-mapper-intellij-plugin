@@ -7,12 +7,6 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.changelog") version "2.2.1"
-    id("com.github.node-gradle.node") version "7.1.0"
-}
-
-node {
-    download.set(false)
-    nodeProjectDir.set(layout.projectDirectory.dir("lsp"))
 }
 
 repositories {
@@ -105,6 +99,13 @@ tasks {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    val npmInstall by registering(Exec::class) {
+        description = "Downloads the ContextMapper Language Server NPM package"
+        group = LifecycleBasePlugin.BUILD_GROUP
+        workingDir(layout.projectDirectory.dir("lsp"))
+        commandLine = listOf("sh", "-c", "npm install")
+    }
+
     /**
      * inspired by:
      * - https://github.com/ContextMapper/vscode-extension/blob/master/build.gradle#L100
@@ -112,7 +113,7 @@ tasks {
      */
     val copyLanguageServer by registering(Copy::class) {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
-        group = "build"
+        group = LifecycleBasePlugin.BUILD_GROUP
         dependsOn(npmInstall)
 
         from(layout.projectDirectory.dir("lsp/node_modules/@lstreckeisen/context-mapper-language-server/cml-ls"))
