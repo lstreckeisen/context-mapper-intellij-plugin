@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.nio.file.Files
 
 plugins {
     id("java")
@@ -18,7 +19,7 @@ repositories {
     }
 }
 
-val cmlVersion = property("cmlVersion") as String
+// val cmlVersion = property("cmlVersion") as String
 val lsp4ijVersion = property("lsp4ijVersion") as String
 val jUnitVersion = property("jUnitVersion") as String
 val mockkVersion = property("mockkVersion") as String
@@ -31,8 +32,6 @@ dependencies {
     }
 
     implementation(files(layout.buildDirectory.dir("lsp")))
-
-    implementation("org.contextmapper:context-mapper-dsl:$cmlVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
@@ -116,7 +115,15 @@ tasks {
         group = LifecycleBasePlugin.BUILD_GROUP
         dependsOn(npmInstall)
 
-        from(layout.projectDirectory.dir("lsp/node_modules/@lstreckeisen/context-mapper-language-server/cml-ls"))
+        val packagePath = file("lsp/node_modules/@lstreckeisen/context-mapper-language-server")
+        val sourcePath =
+            if (Files.isSymbolicLink(packagePath.toPath())) { // for local development
+                packagePath.toPath().toRealPath().resolve("cml-ls")
+            } else {
+                packagePath.toPath()
+            }
+
+        from(sourcePath)
         into(layout.buildDirectory.dir("lsp/lsp"))
     }
 
