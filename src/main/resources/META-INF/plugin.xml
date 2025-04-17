@@ -24,6 +24,26 @@
                   language="Context Mapper DSL"
                   extensions="cml"
         />
+
+        <lang.foldingBuilder language="Context Mapper DSL"
+                             implementationClass="com.redhat.devtools.lsp4ij.features.foldingRange.LSPFoldingRangeBuilder"
+        />
+        <lang.fileViewProviderFactory language="Context Mapper DSL"
+                                      implementationClass="com.redhat.devtools.lsp4ij.features.semanticTokens.viewProvider.LSPSemanticTokensFileViewProviderFactory"
+                                      />
+        <lang.psiStructureViewFactory language="Context Mapper DSL"
+                                      implementationClass="com.redhat.devtools.lsp4ij.features.documentSymbol.LSPDocumentSymbolStructureViewFactory"
+                                      />
+        <typeHierarchyProvider language="Context Mapper DSL"
+                               implementationClass="com.redhat.devtools.lsp4ij.features.typeHierarchy.LSPTypeHierarchyProvider"
+                               />
+        <codeInsight.parameterInfo language="Context Mapper DSL"
+                                   implementationClass="com.redhat.devtools.lsp4ij.features.signatureHelp.LSPParameterInfoHandler"
+                                   />
+        <callHierarchyProvider language="Context Mapper DSL"
+                               implementationClass="com.redhat.devtools.lsp4ij.features.callHierarchy.LSPCallHierarchyProvider"
+                               />
+
     </extensions>
 
     <extensions defaultExtensionNs="com.redhat.devtools.lsp4ij">
@@ -40,5 +60,9 @@
         </server>
 
         <languageMapping language="Context Mapper DSL" serverId="cml-language-server"/>
+
+        <semanticTokensColorsProvider serverId="cml-language-server"
+                                      class="org.contextmapper.intellij.syntaxhighlighting.ContextMapperDSLSemanticTokensColorProvider"
+        />
     </extensions>
 </idea-plugin>
