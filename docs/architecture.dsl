@@ -6,7 +6,7 @@ workspace "ContextMapper IntelliJ Plugin" {
         intelliJ = softwareSystem "IntelliJ IDEA" {
             tag "External"
 
-            cmPlugin = container "ContextMapper Plugin" "Provides ContextMapper support in IntelliJ" {
+            cmPlugin = container "ContextMapper Plugin" "Provides ContextMapper support in IntelliJ" "Kotlin, IntelliJ Plugin SDK" {
                 tag "Maintained"
 
                 lsp4ijConfig = component "LSP4IJ Configuration" "Configures LSP4IJ for ContextMapper" {
@@ -27,8 +27,25 @@ workspace "ContextMapper IntelliJ Plugin" {
             editor = container "IntelliJ Editor" "IntelliJ's text editor" {
                 tag "External"
             }
-            lsp = container "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" {
-                tag "Maintained"
+        }
+
+        languageServer = softwareSystem "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" "Node.js, Langium" {
+            tag "Maintained"
+
+            server = container "Langium Language Server" {
+                tag "External"
+
+                server = component "Langium Language Server" {
+                    tag "External"
+                }
+
+                tokenProvider = component "CML Semantic Token Provider" {
+                    tag "Maintained"
+                }
+
+                semanticValidator = component "CML Semantic Validator" {
+                    tag "Maintained"
+                }
             }
         }
 
@@ -36,13 +53,16 @@ workspace "ContextMapper IntelliJ Plugin" {
         intelliJ.cmPlugin -> intelliJ.lsp4ij "configures"
         intelliJ.cmPlugin -> intelliJ.editor "extends"
         intelliJ.lsp4ij -> intelliJ.editor "integrates with"
-        intelliJ.lsp4ij -> intelliJ.lsp "starts"
-        intelliJ.lsp4ij -> intelliJ.lsp "communicates with"
-        intelliJ.lsp -> intelliJ.lsp4ij "provides editor services"
+        intelliJ.lsp4ij -> languageServer.server "starts"
+        intelliJ.lsp4ij -> languageServer.server "communicates with"
+        languageServer.server -> intelliJ.lsp4ij "provides editor services"
 
         intelliJ.editor -> intelliJ.cmPlugin.generators "triggers"
         intelliJ.cmPlugin.lsp4ijConfig -> intelliJ.lsp4ij "configures"
         intelliJ.cmPlugin.cml -> intelliJ.editor "extends"
+
+        languageServer.server.server -> languageServer.server.tokenProvider "requests tokens from"
+        languageServer.server.server -> languageServer.server.semanticValidator "requests validation from"
     }
 
     views {
@@ -51,7 +71,12 @@ workspace "ContextMapper IntelliJ Plugin" {
             autolayout lr
         }
 
-        component intelliJ.cmPlugin "ComponentDiagram" {
+        component intelliJ.cmPlugin "plugin-ComponentDiagram" {
+            include *
+            autolayout bt
+        }
+
+        component languageServer.server "languageServer-ComponentDiagram" {
             include *
             autolayout bt
         }
