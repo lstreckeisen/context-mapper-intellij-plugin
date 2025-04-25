@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.SystemUtils
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.nio.file.Files
@@ -102,14 +103,15 @@ tasks {
         description = "Downloads the ContextMapper Language Server NPM package"
         group = LifecycleBasePlugin.BUILD_GROUP
         workingDir(layout.projectDirectory.dir("lsp"))
-        commandLine = listOf("sh", "-c", "npm install")
+        val installCommand = "npm install"
+        commandLine =
+            if (SystemUtils.IS_OS_WINDOWS) {
+                listOf("cmd", "/c", installCommand)
+            } else {
+                listOf("sh", "-c", installCommand)
+            }
     }
 
-    /**
-     * inspired by:
-     * - https://github.com/ContextMapper/vscode-extension/blob/master/build.gradle#L100
-     * - https://github.com/redhat-developer/intellij-quarkus/blob/main/build.gradle.kts
-     */
     val copyLanguageServer by registering(Copy::class) {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
         group = LifecycleBasePlugin.BUILD_GROUP
@@ -120,7 +122,7 @@ tasks {
             if (Files.isSymbolicLink(packagePath.toPath())) { // for local development
                 packagePath.toPath().toRealPath().resolve("cml-ls")
             } else {
-                packagePath.toPath()
+                packagePath.toPath().resolve("cml-ls")
             }
 
         from(sourcePath)
