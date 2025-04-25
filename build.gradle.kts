@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.SystemUtils
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.nio.file.Files
@@ -102,7 +103,13 @@ tasks {
         description = "Downloads the ContextMapper Language Server NPM package"
         group = LifecycleBasePlugin.BUILD_GROUP
         workingDir(layout.projectDirectory.dir("lsp"))
-        commandLine = listOf("sh", "-c", "npm install")
+        val installCommand = "npm install"
+        commandLine =
+            if (SystemUtils.IS_OS_WINDOWS) {
+                listOf("cmd", "/c", installCommand)
+            } else {
+                listOf("sh", "-c", installCommand)
+            }
     }
 
     /**
