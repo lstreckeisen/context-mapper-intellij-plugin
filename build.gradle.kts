@@ -105,11 +105,6 @@ tasks {
         commandLine = listOf("sh", "-c", "npm install")
     }
 
-    /**
-     * inspired by:
-     * - https://github.com/ContextMapper/vscode-extension/blob/master/build.gradle#L100
-     * - https://github.com/redhat-developer/intellij-quarkus/blob/main/build.gradle.kts
-     */
     val copyLanguageServer by registering(Copy::class) {
         description = "Extracts and copies the ContextMapper Language Server to the build directory"
         group = LifecycleBasePlugin.BUILD_GROUP
