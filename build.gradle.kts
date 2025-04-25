@@ -120,7 +120,7 @@ tasks {
             if (Files.isSymbolicLink(packagePath.toPath())) { // for local development
                 packagePath.toPath().toRealPath().resolve("cml-ls")
             } else {
-                packagePath.toPath()
+                packagePath.toPath().resolve("cml-ls")
             }
 
         from(sourcePath)
