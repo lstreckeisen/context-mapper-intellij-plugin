@@ -1,0 +1,7 @@
+ContextMap {
+    contains IntelliJPlugin, LanguageServer
+    IntelliJPlugin [D] <- [U,PL,OHS] LanguageServer
+}
+
+BoundedContext IntelliJPlugin
+BoundedContext LanguageServer
