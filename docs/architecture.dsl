@@ -32,7 +32,7 @@ workspace "ContextMapper IntelliJ Plugin" {
         languageServer = softwareSystem "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" "Node.js, Langium" {
             tag "Maintained"
 
-            server = container "Langium Language Server" {
+            server = container "ContextMapper Language Server" {
                 tag "External"
 
                 server = component "Langium Language Server" {
@@ -44,6 +44,14 @@ workspace "ContextMapper IntelliJ Plugin" {
                 }
 
                 semanticValidator = component "CML Semantic Validator" {
+                    tag "Maintained"
+                }
+
+                foldingRangeProvider = component "CML Folding Range Provider" {
+                    tag "Maintained"
+                }
+
+                scopeProvider = component "CML Reference Scope Provider" {
                     tag "Maintained"
                 }
             }
@@ -63,6 +71,8 @@ workspace "ContextMapper IntelliJ Plugin" {
 
         languageServer.server.server -> languageServer.server.tokenProvider "requests tokens from"
         languageServer.server.server -> languageServer.server.semanticValidator "requests validation from"
+        languageServer.server.server -> languageServer.server.foldingRangeProvider "requests folding ranges from"
+        languageServer.server.server -> languageServer.server.scopeProvider "requests reference scope from"
     }
 
     views {
