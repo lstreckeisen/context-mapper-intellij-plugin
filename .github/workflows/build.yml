@@ -1,8 +1,9 @@
 name: IntelliJ Plugin Build
 on:
+  pull_request:
   push:
     branches:
-      - '**'
+      - main
 
 permissions:
   contents: read
@@ -49,3 +50,17 @@ jobs:
 
       - name: Build plugin
         run: ./gradlew buildPlugin
+
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2024.3
+        with:
+          pr-mode: false
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_1103458822 }}
+          QODANA_ENDPOINT: 'https://qodana.cloud'
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: context-mapper-intellij-plugin
+          path: ./build/distributions/context-mapper-intellij-plugin.zip
