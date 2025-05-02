@@ -13,11 +13,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: gradle:jdk23-corretto
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Prepare environment
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          cache: 'gradle'
+          distribution: 'temurin'
 
       # required since test report action uses git
       - name: Configure Git Safe Directory
