@@ -28,6 +28,8 @@
         <lang.foldingBuilder language="Context Mapper DSL"
                              implementationClass="com.redhat.devtools.lsp4ij.features.foldingRange.LSPFoldingRangeBuilder"
         />
+
+        <!-- For Hyperlinking -->
         <lang.fileViewProviderFactory language="Context Mapper DSL"
                                       implementationClass="com.redhat.devtools.lsp4ij.features.semanticTokens.viewProvider.LSPSemanticTokensStructurelessFileViewProviderFactory"
                                       />

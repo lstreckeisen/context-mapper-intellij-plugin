@@ -1,5 +1,6 @@
 import org.apache.commons.lang3.SystemUtils
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.nio.file.Files
 
@@ -11,6 +12,12 @@ plugins {
     id("org.jetbrains.changelog") version "2.2.1"
 }
 
+idea {
+    module {
+        testResources.from("src/test/testData")
+    }
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -20,7 +27,6 @@ repositories {
     }
 }
 
-// val cmlVersion = property("cmlVersion") as String
 val lsp4ijVersion = property("lsp4ijVersion") as String
 val jUnitVersion = property("jUnitVersion") as String
 val mockkVersion = property("mockkVersion") as String
@@ -30,12 +36,13 @@ dependencies {
         intellijIdeaCommunity(property("intelliJVersion") as String)
 
         plugins("com.redhat.devtools.lsp4ij:$lsp4ijVersion")
+
+        testFramework(TestFrameworkType.Platform)
     }
 
     implementation(files(layout.buildDirectory.dir("lsp")))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
+    testImplementation("junit:junit:$jUnitVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
@@ -134,7 +141,7 @@ tasks {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnit()
 
         reports {
             junitXml.required = true
