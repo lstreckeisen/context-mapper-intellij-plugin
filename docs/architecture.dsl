@@ -93,7 +93,7 @@ workspace "ContextMapper IntelliJ Plugin" {
 
         component languageServer.server "languageServer-ComponentDiagram" {
             include *
-            autolayout bt
+            autolayout lr
         }
 
         styles {
