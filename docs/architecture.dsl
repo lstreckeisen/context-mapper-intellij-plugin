@@ -54,6 +54,10 @@ workspace "ContextMapper IntelliJ Plugin" {
                 scopeProvider = component "CML Reference Scope Provider" {
                     tag "Maintained"
                 }
+
+                hoverProvider = component "CML Hover Provider" {
+                    tag "Maintained"
+                }
             }
         }
 
@@ -73,6 +77,7 @@ workspace "ContextMapper IntelliJ Plugin" {
         languageServer.server.server -> languageServer.server.semanticValidator "requests validation from"
         languageServer.server.server -> languageServer.server.foldingRangeProvider "requests folding ranges from"
         languageServer.server.server -> languageServer.server.scopeProvider "requests reference scope from"
+        languageServer.server.server -> languageServer.server.hoverProvider "requests hover documentation from"
     }
 
     views {
