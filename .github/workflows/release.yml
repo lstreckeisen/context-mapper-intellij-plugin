@@ -1,0 +1,31 @@
+name: Release Workflow
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  actions: read
+  checks: write
+
+jobs:
+  release-build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  release:
+    runs-on: ubuntu-latest
+    needs: release-build
+    steps:
+      - name: Download plugin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: context-mapper-intellij-plugin
+          path: ./plugin
+      - name: Create GitHub release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./plugin/context-mapper-intellij-plugin.zip
