@@ -58,6 +58,14 @@ workspace "ContextMapper IntelliJ Plugin" {
                 hoverProvider = component "CML Hover Provider" {
                     tag "Maintained"
                 }
+
+                formatters = component "CML Formatter" {
+                    tag "Maintained"
+                }
+
+                completionProvider = component "CML Completion Provider" {
+                    tag "Maintained"
+                }
             }
         }
 
@@ -78,6 +86,8 @@ workspace "ContextMapper IntelliJ Plugin" {
         languageServer.server.server -> languageServer.server.foldingRangeProvider "requests folding ranges from"
         languageServer.server.server -> languageServer.server.scopeProvider "requests reference scope from"
         languageServer.server.server -> languageServer.server.hoverProvider "requests hover documentation from"
+        languageServer.server.server -> languageServer.server.formatters "gets formatting changes from"
+        languageServer.server.server -> languageServer.server.completionProvider "requests autocomplete suggestions from"
     }
 
     views {
