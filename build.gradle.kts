@@ -1,21 +1,14 @@
 import org.apache.commons.lang3.SystemUtils
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.nio.file.Files
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
+    id("org.jetbrains.kotlin.jvm") version "2.1.21"
     id("org.jetbrains.intellij.platform") version "2.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.changelog") version "2.2.1"
-}
-
-idea {
-    module {
-        testResources.from("src/test/testData")
-    }
 }
 
 repositories {
@@ -28,7 +21,7 @@ repositories {
 }
 
 val lsp4ijVersion = property("lsp4ijVersion") as String
-val jUnitVersion = property("jUnitVersion") as String
+val jUnit5Version = property("jUnit5Version") as String
 val mockkVersion = property("mockkVersion") as String
 
 dependencies {
@@ -36,14 +29,15 @@ dependencies {
         intellijIdeaCommunity(property("intelliJVersion") as String)
 
         plugins("com.redhat.devtools.lsp4ij:$lsp4ijVersion")
-
-        testFramework(TestFrameworkType.Platform)
     }
 
     implementation(files(layout.buildDirectory.dir("lsp")))
 
-    testImplementation("junit:junit:$jUnitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnit5Version")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.12.2")
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnit5Version")
 }
 
 intellijPlatform {
@@ -141,7 +135,7 @@ tasks {
     }
 
     test {
-        useJUnit()
+        useJUnitPlatform()
 
         reports {
             junitXml.required = true
