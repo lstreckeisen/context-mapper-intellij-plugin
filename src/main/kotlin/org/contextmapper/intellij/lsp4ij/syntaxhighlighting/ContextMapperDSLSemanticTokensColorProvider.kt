@@ -1,4 +1,4 @@
-package org.contextmapper.intellij.syntaxhighlighting
+package org.contextmapper.intellij.lsp4ij.syntaxhighlighting
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
@@ -24,7 +24,7 @@ class ContextMapperDSLSemanticTokensColorProvider : SemanticTokensColorsProvider
                 if (tokenModifiers.contains(SemanticTokenModifiers.Declaration)) {
                     TextAttributesKey.createTextAttributesKey("CML_TYPE_DECLARATION", DefaultLanguageHighlighterColors.CLASS_NAME)
                 } else {
-                    TextAttributesKey.createTextAttributesKey("CML_TYPE_DECLARATION", DefaultLanguageHighlighterColors.CLASS_REFERENCE)
+                    TextAttributesKey.createTextAttributesKey("CML_TYPE_USAGE", DefaultLanguageHighlighterColors.CLASS_REFERENCE)
                 }
             SemanticTokenTypes.String -> TextAttributesKey.createTextAttributesKey("CML_STRING", DefaultLanguageHighlighterColors.STRING)
             SemanticTokenTypes.Namespace ->
