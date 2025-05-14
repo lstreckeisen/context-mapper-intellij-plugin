@@ -14,7 +14,7 @@ import kotlin.io.path.Path
 private val logger = Logger.getInstance(PlantUMLAction::class.java)
 
 class PlantUMLAction : AnAction() {
-    val generator = ContextMapperGenerator(lspCommandExecutor)
+    private val generator = ContextMapperGenerator(lspCommandExecutor)
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project
