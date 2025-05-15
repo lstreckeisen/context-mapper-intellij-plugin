@@ -42,7 +42,7 @@ intellijPlatform {
     pluginConfiguration {
         id = "org.contextmapper.intellij-plugin"
         name = "ContextMapper"
-        version = "0.2.0"
+        version = "0.3.0"
 
         productDescriptor {
         }
