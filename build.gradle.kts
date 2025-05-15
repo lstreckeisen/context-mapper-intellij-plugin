@@ -9,7 +9,6 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.6.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.changelog") version "2.2.1"
-    id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
 
 repositories {
@@ -136,10 +135,8 @@ tasks {
 
         reports {
             junitXml.required = true
-            html.required = false
+            html.required = true
         }
-
-        finalizedBy(koverBinaryReport, koverHtmlReport)
     }
 
     clean {
