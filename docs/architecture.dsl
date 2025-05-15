@@ -13,11 +13,7 @@ workspace "ContextMapper IntelliJ Plugin" {
                     tag "Maintained"
                 }
 
-                cml = component "CML Editor Features" "Provides CML editor features" {
-                    tag "Maintained"
-                }
-
-                generators = component "CML Generators" "Generate additional resources from CML models" {
+                actions = component "CML Editor Actions" "Generate additional resources from CML models" {
                     tag "Maintained"
                 }
             }
@@ -66,20 +62,23 @@ workspace "ContextMapper IntelliJ Plugin" {
                 completionProvider = component "CML Completion Provider" {
                     tag "Maintained"
                 }
+
+                commandHandler = component "CML Command Handler" {
+                    tag "Maintained"
+                }
             }
         }
 
         pluginUser -> intelliJ.editor "uses"
-        intelliJ.cmPlugin -> intelliJ.lsp4ij "configures"
-        intelliJ.cmPlugin -> intelliJ.editor "extends"
+
         intelliJ.lsp4ij -> intelliJ.editor "integrates with"
         intelliJ.lsp4ij -> languageServer.server "starts"
         intelliJ.lsp4ij -> languageServer.server "communicates with"
         languageServer.server -> intelliJ.lsp4ij "provides editor services"
 
-        intelliJ.editor -> intelliJ.cmPlugin.generators "triggers"
+        intelliJ.editor -> intelliJ.cmPlugin.actions "triggers actions"
         intelliJ.cmPlugin.lsp4ijConfig -> intelliJ.lsp4ij "configures"
-        intelliJ.cmPlugin.cml -> intelliJ.editor "extends"
+        intelliJ.cmPlugin.actions -> intelliJ.lsp4ij "triggers command execution"
 
         languageServer.server.server -> languageServer.server.tokenProvider "requests tokens from"
         languageServer.server.server -> languageServer.server.semanticValidator "requests validation from"
@@ -88,6 +87,7 @@ workspace "ContextMapper IntelliJ Plugin" {
         languageServer.server.server -> languageServer.server.hoverProvider "requests hover documentation from"
         languageServer.server.server -> languageServer.server.formatters "gets formatting changes from"
         languageServer.server.server -> languageServer.server.completionProvider "requests autocomplete suggestions from"
+        languageServer.server.server -> languageServer.server.commandHandler "trigger command/generator execution"
     }
 
     views {
