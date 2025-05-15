@@ -19,7 +19,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="Context Mapper DSL"
-                  implementationClass="org.contextmapper.intellij.lang.CMLFileType"
+                  implementationClass="org.contextmapper.intellij.lang.ContextMapperDslFileType"
                   fieldName="INSTANCE"
                   language="Context Mapper DSL"
                   extensions="cml"
@@ -32,19 +32,23 @@
         <!-- For Hyperlinking -->
         <lang.fileViewProviderFactory language="Context Mapper DSL"
                                       implementationClass="com.redhat.devtools.lsp4ij.features.semanticTokens.viewProvider.LSPSemanticTokensStructurelessFileViewProviderFactory"
-                                      />
+        />
         <lang.psiStructureViewFactory language="Context Mapper DSL"
                                       implementationClass="com.redhat.devtools.lsp4ij.features.documentSymbol.LSPDocumentSymbolStructureViewFactory"
-                                      />
+        />
         <typeHierarchyProvider language="Context Mapper DSL"
                                implementationClass="com.redhat.devtools.lsp4ij.features.typeHierarchy.LSPTypeHierarchyProvider"
-                               />
+        />
+
+        <notificationGroup id="Context Mapper DSL"
+                           displayType="BALLOON"
+        />
 
     </extensions>
 
     <extensions defaultExtensionNs="com.redhat.devtools.lsp4ij">
         <server id="cml-language-server"
-                factoryClass="org.contextmapper.intellij.lsp4ij.CMLServerFactory">
+                factoryClass="org.contextmapper.intellij.lsp4ij.server.ContextMapperDslServerFactory">
             <description>
                 <![CDATA[
                 <p>ContextMapper Language Server</p>
@@ -58,7 +62,25 @@
         <languageMapping language="Context Mapper DSL" serverId="cml-language-server" languageId="Context Mapper DSL"/>
 
         <semanticTokensColorsProvider serverId="cml-language-server"
-                                      class="org.contextmapper.intellij.syntaxhighlighting.ContextMapperDSLSemanticTokensColorProvider"
+                                      class="org.contextmapper.intellij.lsp4ij.syntaxhighlighting.ContextMapperDSLSemanticTokensColorProvider"
         />
     </extensions>
+
+    <actions>
+        <action class="org.contextmapper.intellij.actions.PlantUMLAction"
+                id="org.contextmapper.GeneratePlantUML"
+                text="Generate PlantUML Diagrams"
+                description="Generates plantUML diagrams"
+        />
+
+        <group id="org.contextmapper.editorActions"
+               text="ContextMapper"
+               popup="true"
+        >
+            <add-to-group group-id="EditorPopupMenu2"
+                          anchor="last"
+            />
+            <reference ref="org.contextmapper.GeneratePlantUML"/>
+        </group>
+    </actions>
 </idea-plugin>
