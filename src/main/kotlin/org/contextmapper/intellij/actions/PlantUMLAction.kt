@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import org.contextmapper.intellij.generators.ContextMapperGenerator
 import org.contextmapper.intellij.notifications.showErrorNotification
 import org.contextmapper.intellij.notifications.showInfoNotification
@@ -14,7 +15,7 @@ import kotlin.io.path.Path
 private val logger = Logger.getInstance(PlantUMLAction::class.java)
 
 class PlantUMLAction : AnAction() {
-    private val generator = ContextMapperGenerator(lspCommandExecutor)
+    private val generator = ContextMapperGenerator { context -> CommandExecutor.executeCommand(context) }
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project
