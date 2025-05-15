@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
-import org.contextmapper.intellij.generators.ContextMapperGenerator
+import org.contextmapper.intellij.actions.generators.ContextMapperGenerator
 import org.contextmapper.intellij.notifications.showErrorNotification
 import org.contextmapper.intellij.notifications.showInfoNotification
 import org.eclipse.lsp4j.Command
