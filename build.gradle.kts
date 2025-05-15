@@ -6,9 +6,10 @@ import java.nio.file.Files
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.intellij.platform") version "2.5.0"
+    id("org.jetbrains.intellij.platform") version "2.6.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.changelog") version "2.2.1"
+    id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
 
 repositories {
@@ -21,7 +22,6 @@ repositories {
 }
 
 val lsp4ijVersion = property("lsp4ijVersion") as String
-val jUnit5Version = property("jUnit5Version") as String
 val mockkVersion = property("mockkVersion") as String
 
 dependencies {
@@ -33,11 +33,8 @@ dependencies {
 
     implementation(files(layout.buildDirectory.dir("lsp")))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnit5Version")
-    testImplementation("org.junit.platform:junit-platform-launcher:1.12.2")
+    testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:$mockkVersion")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnit5Version")
 }
 
 intellijPlatform {
@@ -141,6 +138,8 @@ tasks {
             junitXml.required = true
             html.required = false
         }
+
+        finalizedBy(koverBinaryReport, koverHtmlReport)
     }
 
     clean {
