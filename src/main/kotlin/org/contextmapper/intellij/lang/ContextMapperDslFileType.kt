@@ -6,7 +6,7 @@ import com.intellij.openapi.util.NlsSafe
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-class CMLFileType : LanguageFileType(CMLLanguage.INSTANCE) {
+class ContextMapperDslFileType : LanguageFileType(ContextMapperDslLanguage.INSTANCE) {
     override fun getName(): @NonNls String = "Context Mapper DSL"
 
     override fun getDescription(): @NlsContexts.Label String = "Context Mapper DSL"
@@ -14,11 +14,11 @@ class CMLFileType : LanguageFileType(CMLLanguage.INSTANCE) {
     @Suppress("UnstableApiUsage") // NlsSafe is used by interface
     override fun getDefaultExtension(): @NlsSafe String = "cml"
 
-    override fun getIcon(): Icon = CMLIcons.FILE
+    override fun getIcon(): Icon = ContextMapperDslIcons.FILE
 
     companion object {
         @JvmField
         @Suppress("Unused") // required for plugin.xml
-        val INSTANCE = CMLFileType()
+        val INSTANCE = ContextMapperDslFileType()
     }
 }
