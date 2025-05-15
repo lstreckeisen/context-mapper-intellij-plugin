@@ -1,4 +1,4 @@
-package org.contextmapper.intellij.generators
+package org.contextmapper.intellij.actions.generators
 
 import com.intellij.openapi.project.Project
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
