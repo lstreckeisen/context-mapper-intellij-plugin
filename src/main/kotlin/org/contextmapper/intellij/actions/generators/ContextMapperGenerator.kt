@@ -1,6 +1,7 @@
 package org.contextmapper.intellij.actions.generators
 
 import com.intellij.openapi.project.Project
+import com.redhat.devtools.lsp4ij.LanguageServerManager
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import com.redhat.devtools.lsp4ij.commands.LSPCommandContext
 import kotlinx.coroutines.CoroutineScope
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.contextmapper.intellij.actions.LspCommandExecutor
 import org.contextmapper.intellij.utils.CONTEXT_MAPPER_SERVER_ID
 import org.eclipse.lsp4j.Command
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import java.util.concurrent.CompletableFuture
 
 class ContextMapperGenerator(
@@ -18,10 +20,27 @@ class ContextMapperGenerator(
         project: Project,
         command: Command
     ): CompletableFuture<Result<GeneratorResult>> {
-        val context = LSPCommandContext(command, project)
-        context.preferredLanguageServerId = CONTEXT_MAPPER_SERVER_ID
-
         val future = CompletableFuture<Result<GeneratorResult>>()
+
+        val context = LSPCommandContext(command, project)
+
+        val languageServer =
+            try {
+                LanguageServerManager.getInstance(project).getLanguageServer(CONTEXT_MAPPER_SERVER_ID)
+                    .join()
+            } catch (ex: Exception) {
+                future.complete(
+                    Result.failure(
+                        ContextMapperGeneratorException(
+                            "Could not find language server instance.",
+                            ex,
+                        ),
+                    ),
+                )
+                return future
+            }
+        context.preferredLanguageServerId = CONTEXT_MAPPER_SERVER_ID
+        context.preferredLanguageServer = languageServer
 
         val response = commandExecutor(context)
         CoroutineScope(Dispatchers.IO).launch {
@@ -40,19 +59,12 @@ class ContextMapperGenerator(
             try {
                 val returnedValue = result.join()
 
-                val generatedFiles: List<String> =
-                    if (returnedValue is List<*>) {
-                        val files = returnedValue.filterIsInstance<String>()
-                        if (files.size != returnedValue.size) {
-                            future.complete(Result.failure(ContextMapperGeneratorException("Generator returned unexpected result type.")))
-                            return
-                        }
-                        files
-                    } else {
-                        future.complete(Result.failure(ContextMapperGeneratorException("Generator returned unexpected result type.")))
-                        return
-                    }
+                val generatedFilesResult = extractGeneratedFiles(returnedValue)
+                if (generatedFilesResult.isFailure) {
+                    future.complete(Result.failure(generatedFilesResult.exceptionOrNull()!!))
+                }
 
+                val generatedFiles = generatedFilesResult.getOrNull()!!
                 if (generatedFiles.isEmpty()) {
                     future.complete(Result.success(GeneratorResult(listOf())))
                 } else {
@@ -70,6 +82,27 @@ class ContextMapperGenerator(
             }
         } else {
             future.complete(Result.failure(ContextMapperGeneratorException("Generator failed without error")))
+        }
+    }
+
+    private fun extractGeneratedFiles(returnedValue: Any): Result<List<String>> {
+        when (returnedValue) {
+            is List<*> -> {
+                val files = returnedValue.filterIsInstance<String>()
+                if (files.size != returnedValue.size) {
+                    return Result.failure(ContextMapperGeneratorException("Generator returned unexpected result type."))
+                }
+                return Result.success(files)
+            }
+
+            is ResponseErrorException -> {
+                // ResponseErrors are already handled by LSP4IJ
+                return Result.failure(HandledGeneratorException())
+            }
+
+            else -> {
+                return Result.failure(ContextMapperGeneratorException("Generator returned unexpected result type."))
+            }
         }
     }
 }

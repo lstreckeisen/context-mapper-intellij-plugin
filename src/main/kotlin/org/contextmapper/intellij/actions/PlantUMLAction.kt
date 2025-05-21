@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import org.contextmapper.intellij.actions.generators.ContextMapperGenerator
+import org.contextmapper.intellij.actions.generators.HandledGeneratorException
 import org.contextmapper.intellij.utils.showErrorNotification
 import org.contextmapper.intellij.utils.showInfoNotification
 import org.eclipse.lsp4j.Command
@@ -34,10 +35,12 @@ class PlantUMLAction : AnAction() {
         generator.generate(project, command)
             .whenComplete { result, ex ->
                 if (ex != null || result.isFailure) {
+                    val resultError = result.exceptionOrNull()
                     val errorMessage =
-                        if (ex != null) {
+                        if (resultError == null) {
                             "An unexpected error occurred while generating PlantUML diagrams"
                         } else {
+                            if (resultError is HandledGeneratorException) return@whenComplete
                             result.exceptionOrNull()!!.message!!
                         }
 
@@ -51,8 +54,8 @@ class PlantUMLAction : AnAction() {
                     showInfoNotification(project, "No PlantUML diagrams were created")
                 } else {
                     showInfoNotification(project, "Successfully created ${generatedFiles.size} PlantUML diagram(s)")
+                    LocalFileSystem.getInstance().refresh(true)
                 }
-                LocalFileSystem.getInstance().refresh(true)
             }
     }
 }
