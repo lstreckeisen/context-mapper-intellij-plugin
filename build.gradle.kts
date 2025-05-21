@@ -89,6 +89,7 @@ intellijPlatform {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        allWarningsAsErrors = true
     }
 }
 
