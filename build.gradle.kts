@@ -44,7 +44,7 @@ intellijPlatform {
     pluginConfiguration {
         id = "org.contextmapper.intellij-plugin"
         name = "ContextMapper"
-        version = "0.3.0"
+        version = "0.3.1"
 
         productDescriptor {
         }
@@ -89,6 +89,7 @@ intellijPlatform {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        allWarningsAsErrors = true
     }
 }
 
