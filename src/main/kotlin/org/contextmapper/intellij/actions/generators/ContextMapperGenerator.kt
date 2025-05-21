@@ -1,6 +1,7 @@
 package org.contextmapper.intellij.actions.generators
 
 import com.intellij.openapi.project.Project
+import com.redhat.devtools.lsp4ij.LanguageServerItem
 import com.redhat.devtools.lsp4ij.LanguageServerManager
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import com.redhat.devtools.lsp4ij.commands.LSPCommandContext
@@ -14,7 +15,8 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import java.util.concurrent.CompletableFuture
 
 class ContextMapperGenerator(
-    private val commandExecutor: LspCommandExecutor
+    private val commandExecutor: LspCommandExecutor,
+    private val languageServerManager: LanguageServerManager
 ) {
     fun generate(
         project: Project,
@@ -24,23 +26,13 @@ class ContextMapperGenerator(
 
         val context = LSPCommandContext(command, project)
 
-        val languageServer =
-            try {
-                LanguageServerManager.getInstance(project).getLanguageServer(CONTEXT_MAPPER_SERVER_ID)
-                    .join()
-            } catch (ex: Exception) {
-                future.complete(
-                    Result.failure(
-                        ContextMapperGeneratorException(
-                            "Could not find language server instance.",
-                            ex,
-                        ),
-                    ),
-                )
-                return future
-            }
+        val languageServerResult = getLanguageServer()
+        if (languageServerResult.isFailure) {
+            future.complete(Result.failure(languageServerResult.exceptionOrNull()!!))
+            return future
+        }
         context.preferredLanguageServerId = CONTEXT_MAPPER_SERVER_ID
-        context.preferredLanguageServer = languageServer
+        context.preferredLanguageServer = languageServerResult.getOrNull()
 
         val response = commandExecutor(context)
         CoroutineScope(Dispatchers.IO).launch {
@@ -82,6 +74,22 @@ class ContextMapperGenerator(
             }
         } else {
             future.complete(Result.failure(ContextMapperGeneratorException("Generator failed without error")))
+        }
+    }
+
+    private fun getLanguageServer(): Result<LanguageServerItem?> {
+        return try {
+            val languageServer =
+                languageServerManager.getLanguageServer(CONTEXT_MAPPER_SERVER_ID)
+                    .join()
+            Result.success(languageServer)
+        } catch (ex: Exception) {
+            Result.failure(
+                ContextMapperGeneratorException(
+                    "Could not find language server instance.",
+                    ex,
+                ),
+            )
         }
     }
 

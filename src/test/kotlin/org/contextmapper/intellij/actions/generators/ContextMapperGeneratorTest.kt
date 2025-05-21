@@ -1,6 +1,7 @@
 package org.contextmapper.intellij.actions.generators
 
 import com.intellij.openapi.project.Project
+import com.redhat.devtools.lsp4ij.LanguageServerManager
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import com.redhat.devtools.lsp4ij.settings.UserDefinedLanguageServerSettings
 import io.mockk.CapturingSlot
@@ -8,7 +9,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import org.contextmapper.intellij.actions.LspCommandExecutor
+import org.contextmapper.intellij.utils.CONTEXT_MAPPER_SERVER_ID
 import org.eclipse.lsp4j.Command
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,6 +23,7 @@ class ContextMapperGeneratorTest() {
 
     private lateinit var successMessage: CapturingSlot<String>
     private lateinit var lspCommandExecutor: LspCommandExecutor
+    private lateinit var languageServerManager: LanguageServerManager
     private lateinit var project: Project
     private lateinit var generator: ContextMapperGenerator
 
@@ -27,6 +31,13 @@ class ContextMapperGeneratorTest() {
     fun setup() {
         successMessage = slot()
         lspCommandExecutor = mockk(relaxed = true)
+        languageServerManager =
+            mockk(relaxed = true) {
+                every { getLanguageServer(any()) } returns
+                    mockk {
+                        every { join() } returns mockk(relaxed = true)
+                    }
+            }
         project =
             mockk {
                 every { basePath } returns "/tmp"
@@ -35,7 +46,7 @@ class ContextMapperGeneratorTest() {
                         relaxed = true,
                     )
             }
-        generator = ContextMapperGenerator(lspCommandExecutor)
+        generator = ContextMapperGenerator(lspCommandExecutor, languageServerManager)
     }
 
     @Test
@@ -108,6 +119,41 @@ class ContextMapperGeneratorTest() {
 
         assertNotNull(result)
         assertTrue(result.isFailure)
+        assertTrue { result.exceptionOrNull() is ContextMapperGeneratorException }
+    }
+
+    @Test
+    fun testFailedGenerationWithHandledException() {
+        every { lspCommandExecutor.invoke(any()) } returns
+            mockk<CommandExecutor.LSPCommandResponse> {
+                every { response } returns
+                    mockk {
+                        every { join() } returns mockk<ResponseErrorException>()
+                    }
+            }
+
+        val result =
+            generator.generate(project, command)
+                .join()
+
+        assertNotNull(result)
+        assertTrue { result.isFailure }
+        assertTrue { result.exceptionOrNull() is HandledGeneratorException }
+    }
+
+    @Test
+    fun testGeneratorWithMissingLanguageServer() {
+        every { languageServerManager.getLanguageServer(eq(CONTEXT_MAPPER_SERVER_ID)) } returns
+            mockk {
+                every { join() } throws RuntimeException()
+            }
+
+        val result =
+            generator.generate(project, command)
+                .join()
+
+        assertNotNull(result)
+        assertTrue { result.isFailure }
         assertTrue { result.exceptionOrNull() is ContextMapperGeneratorException }
     }
 }
