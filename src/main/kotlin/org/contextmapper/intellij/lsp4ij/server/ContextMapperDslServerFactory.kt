@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.redhat.devtools.lsp4ij.LanguageServerFactory
 import com.redhat.devtools.lsp4ij.client.LanguageClientImpl
 import com.redhat.devtools.lsp4ij.server.StreamConnectionProvider
-import org.contextmapper.intellij.PLUGIN_ID
+import org.contextmapper.intellij.utils.PLUGIN_ID
 
 class ContextMapperDslServerFactory : LanguageServerFactory {
     override fun createConnectionProvider(project: Project): StreamConnectionProvider {
