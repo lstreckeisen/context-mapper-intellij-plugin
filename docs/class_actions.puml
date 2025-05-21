@@ -1,0 +1,24 @@
+@startuml
+
+abstract class AnAction {
+{abstract} + actionPerformed(event: AnActionEvent)
+}
+
+class PlantUMLAction {
++ actionPerformed(event: AnActionEvent)
+}
+
+class ContextMapperGenerator {
+- commandExecutor: LspCommandExecutor
++ generate(project: Project, command: Command): CompletableFuture<GeneratorResult>
+}
+
+class CommandExecutor {
+{static} + executeCommand(context: LSPCommandContext): LSPCommandResponse
+}
+
+AnAction <|-- PlantUMLAction
+PlantUMLAction o-- "1" ContextMapperGenerator
+PlantUMLAction --> CommandExecutor
+
+@enduml

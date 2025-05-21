@@ -1,8 +1,8 @@
 UseCase UC1_CML_Editing {
     actor = "ContextMapper User"
     interactions = 
-        "recognize" a "SyntaxError",
-        "recognize" a "CmlKeyword",
+        "recognise" a "SyntaxError",
+        "recognise" a "CmlKeyword",
         "collapse" a "CmlDefinitionBlock",
         "expand" a "CmlDefinitionBlock",
         "see" a "HoverDocumentation",
