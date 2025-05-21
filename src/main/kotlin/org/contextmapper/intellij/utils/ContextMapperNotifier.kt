@@ -1,4 +1,4 @@
-package org.contextmapper.intellij.notifications
+package org.contextmapper.intellij.utils
 
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType

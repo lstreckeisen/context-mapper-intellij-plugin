@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.contextmapper.intellij.actions.LspCommandExecutor
-import org.contextmapper.intellij.lsp4ij.server.CONTEXT_MAPPER_SERVER_ID
+import org.contextmapper.intellij.utils.CONTEXT_MAPPER_SERVER_ID
 import org.eclipse.lsp4j.Command
 import java.util.concurrent.CompletableFuture
 

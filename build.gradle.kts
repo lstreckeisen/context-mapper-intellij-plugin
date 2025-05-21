@@ -22,6 +22,7 @@ repositories {
 
 val lsp4ijVersion = property("lsp4ijVersion") as String
 val mockkVersion = property("mockkVersion") as String
+val archUnitVersion = property("archUnitVersion") as String
 
 dependencies {
     intellijPlatform {
@@ -34,6 +35,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.tngtech.archunit:archunit:$archUnitVersion")
 }
 
 intellijPlatform {
