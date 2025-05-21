@@ -1,4 +1,4 @@
-workspace "ContextMapper IntelliJ Plugin" {
+workspace "Context Mapper IntelliJ Plugin" {
     !identifiers hierarchical
 
     model {
@@ -6,10 +6,14 @@ workspace "ContextMapper IntelliJ Plugin" {
         intelliJ = softwareSystem "IntelliJ IDEA" {
             tag "External"
 
-            cmPlugin = container "ContextMapper Plugin" "Provides ContextMapper support in IntelliJ" "Kotlin, IntelliJ Plugin SDK" {
+            cmPlugin = container "Context Mapper Plugin" "Provides Context Mapper support in IntelliJ" "Kotlin, IntelliJ Plugin SDK" {
                 tag "Maintained"
+                
+                langConfig = component "Context Mapper Language Config" "Configures CML as language is IntelliJ" {
+                    tag "Maintained"
+                }
 
-                lsp4ijConfig = component "LSP4IJ Configuration" "Configures LSP4IJ for ContextMapper" {
+                lsp4ijConfig = component "LSP4IJ Configuration" "Configures LSP4IJ for Context Mapper" {
                     tag "Maintained"
                 }
 
@@ -25,10 +29,10 @@ workspace "ContextMapper IntelliJ Plugin" {
             }
         }
 
-        languageServer = softwareSystem "ContextMapper Language Server" "Provides language server capabilities for ContextMapper" "Node.js, Langium" {
+        languageServer = softwareSystem "Context Mapper Language Server" "Provides language server capabilities for Context Mapper" "Node.js, Langium" {
             tag "Maintained"
 
-            server = container "ContextMapper Language Server" {
+            server = container "Context Mapper Language Server" {
                 tag "External"
 
                 server = component "Langium Language Server" {
@@ -79,6 +83,7 @@ workspace "ContextMapper IntelliJ Plugin" {
         intelliJ.editor -> intelliJ.cmPlugin.actions "triggers actions"
         intelliJ.cmPlugin.lsp4ijConfig -> intelliJ.lsp4ij "configures"
         intelliJ.cmPlugin.actions -> intelliJ.lsp4ij "triggers command execution"
+        intelliJ.cmPlugin.langConfig -> intelliJ.editor "configures"
 
         languageServer.server.server -> languageServer.server.tokenProvider "requests tokens from"
         languageServer.server.server -> languageServer.server.semanticValidator "requests validation from"
@@ -91,6 +96,11 @@ workspace "ContextMapper IntelliJ Plugin" {
     }
 
     views {
+        systemContext intelliJ "ContextDiagram" {
+            include *
+            autolayout lr
+        }
+
         container intelliJ "ContainerDiagram" {
             include *
             autolayout lr
