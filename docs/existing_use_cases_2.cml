@@ -18,7 +18,7 @@ UseCase UC7_CML_ServiceCutter {
     benefit = "I am able to create ServiceCutter diagrams so I can visually see my service cuts"
 }
 
-UseCase UC8_CML_FreeMaker {
+UseCase UC8_CML_FreeMarker {
     actor = "ContextMapper User"
     interactions = "apply" a "FreeMakerTemplate"
     benefit = "I am able to create my own files, e.g. Markdown, from my CML definitions"

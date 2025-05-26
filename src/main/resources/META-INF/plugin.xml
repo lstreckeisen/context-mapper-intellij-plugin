@@ -67,12 +67,6 @@
     </extensions>
 
     <actions>
-        <action class="org.contextmapper.intellij.actions.PlantUMLAction"
-                id="org.contextmapper.GeneratePlantUML"
-                text="Generate PlantUML Diagrams"
-                description="Generates plantUML diagrams"
-        />
-
         <group id="org.contextmapper.editorActions"
                text="ContextMapper"
                popup="true"
@@ -80,7 +74,12 @@
             <add-to-group group-id="EditorPopupMenu2"
                           anchor="last"
             />
-            <reference ref="org.contextmapper.GeneratePlantUML"/>
+
+            <action class="org.contextmapper.intellij.actions.PlantUMLAction"
+                    id="org.contextmapper.GeneratePlantUML"
+                    text="Generate PlantUML Diagrams"
+                    description="Generates plantUML diagrams"
+            />
         </group>
     </actions>
 </idea-plugin>
