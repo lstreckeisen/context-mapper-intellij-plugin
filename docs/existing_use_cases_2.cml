@@ -1,31 +1,23 @@
 UseCase UC5_CML_Generate_SketchMiner {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = "generate" a "SketchMinerDiagram"
     benefit = "I am able to create a BPMN diagram from my process flow definitions"
 }
 
 UseCase UC6_CML_Generate_MDSLContract {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = "generate" a "MDSLContract"
     benefit = "I am able to create an MDSL contract from my CML definitions"
 }
 
-UseCase UC7_CML_ServiceCutter {
-    actor = "ContextMapper User"
-    interactions =
-        "create" a "ServiceCutterConfiguration",
-        "generate" a "ServiceCutterDiagram"
-    benefit = "I am able to create ServiceCutter diagrams so I can visually see my service cuts"
-}
-
-UseCase UC8_CML_FreeMaker {
-    actor = "ContextMapper User"
+UseCase UC7_CML_FreeMarker {
+    actor = "Context Mapper User"
     interactions = "apply" a "FreeMakerTemplate"
     benefit = "I am able to create my own files, e.g. Markdown, from my CML definitions"
 }
 
-UseCase UC9_CML_Refactorings {
-    actor = "ContextMapper User"
+UseCase UC8_CML_Refactorings {
+    actor = "Context Mapper User"
     interactions =
         "split" an "Aggregate",
         "split" a "BoundedContext",
@@ -39,14 +31,14 @@ UseCase UC9_CML_Refactorings {
     benefit = "I am able to easily restructure my CML definitions"
 }
 
-UseCase UC10_CML_Discovery {
-    actor = "ContextMapper User"
-    interactions = "discover" a "ContextMapperDefintion" for "my existing project"
+UseCase UC9_CML_Discovery {
+    actor = "Context Mapper User"
+    interactions = "discover" a "Context MapperDefintion" for "my existing project"
     benefit = "I am able to get CML defintions for my existing project"
 }
 
-UseCase U11_CML_Validators {
-    actor = "ContextMapper User"
+UseCase U10_CML_Validators {
+    actor = "Context Mapper User"
     interactions = "validate" a "CMLFile"
     benefit = "I am able to validate my CML files for their semantic correctness"
 }

@@ -3,11 +3,7 @@ package org.contextmapper.intellij.actions.generators
 import com.intellij.openapi.project.Project
 import com.redhat.devtools.lsp4ij.LanguageServerItem
 import com.redhat.devtools.lsp4ij.LanguageServerManager
-import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import com.redhat.devtools.lsp4ij.commands.LSPCommandContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.contextmapper.intellij.actions.LspCommandExecutor
 import org.contextmapper.intellij.utils.CONTEXT_MAPPER_SERVER_ID
 import org.eclipse.lsp4j.Command
@@ -26,70 +22,78 @@ class ContextMapperGenerator(
 
         val context = LSPCommandContext(command, project)
 
-        val languageServerResult = getLanguageServer()
-        if (languageServerResult.isFailure) {
-            future.complete(Result.failure(languageServerResult.exceptionOrNull()!!))
-            return future
-        }
-        context.preferredLanguageServerId = CONTEXT_MAPPER_SERVER_ID
-        context.preferredLanguageServer = languageServerResult.getOrNull()
-
-        val response = commandExecutor(context)
-        CoroutineScope(Dispatchers.IO).launch {
-            processResponse(response, future)
-        }
-        return future
-    }
-
-    private fun processResponse(
-        response: CommandExecutor.LSPCommandResponse,
-        future: CompletableFuture<Result<GeneratorResult>>
-    ) {
-        val result = response.response
-
-        if (result != null) {
-            try {
-                val returnedValue = result.join()
-
-                val generatedFilesResult = extractGeneratedFiles(returnedValue)
-                if (generatedFilesResult.isFailure) {
-                    future.complete(Result.failure(generatedFilesResult.exceptionOrNull()!!))
-                }
-
-                val generatedFiles = generatedFilesResult.getOrNull()!!
-                if (generatedFiles.isEmpty()) {
-                    future.complete(Result.success(GeneratorResult(listOf())))
-                } else {
-                    future.complete(Result.success(GeneratorResult(generatedFiles)))
-                }
-            } catch (ex: Exception) {
+        languageServerManager.getLanguageServer(CONTEXT_MAPPER_SERVER_ID)
+            .thenAcceptAsync { languageServer ->
+                executeCommand(future, context, languageServer)
+            }
+            .exceptionally { throwable ->
                 future.complete(
                     Result.failure(
                         ContextMapperGeneratorException(
-                            "Generator failed with exception: ${ex.message}",
-                            ex,
+                            "Could not find language server instance.",
+                            throwable,
                         ),
                     ),
                 )
+                null
             }
-        } else {
-            future.complete(Result.failure(ContextMapperGeneratorException("Generator failed without error")))
-        }
+
+        return future
     }
 
-    private fun getLanguageServer(): Result<LanguageServerItem?> {
-        return try {
-            val languageServer =
-                languageServerManager.getLanguageServer(CONTEXT_MAPPER_SERVER_ID)
-                    .join()
-            Result.success(languageServer)
-        } catch (ex: Exception) {
-            Result.failure(
-                ContextMapperGeneratorException(
-                    "Could not find language server instance.",
-                    ex,
+    private fun executeCommand(
+        future: CompletableFuture<Result<GeneratorResult>>,
+        context: LSPCommandContext,
+        languageServerItem: LanguageServerItem?
+    ) {
+        if (languageServerItem == null) {
+            future.complete(
+                Result.failure(
+                    ContextMapperGeneratorException(
+                        "Could not find language server instance.",
+                    ),
                 ),
             )
+            return
+        }
+        context.preferredLanguageServerId = CONTEXT_MAPPER_SERVER_ID
+        context.preferredLanguageServer = languageServerItem
+
+        val response = commandExecutor(context).response
+        if (response == null) {
+            future.complete(Result.failure(ContextMapperGeneratorException("Generator failed without error")))
+            return
+        }
+
+        response.thenAcceptAsync { generatorResult -> processResponse(future, generatorResult) }
+            .exceptionally { throwable ->
+                future.complete(
+                    Result.failure(
+                        ContextMapperGeneratorException(
+                            "Generator failed with exception: ${throwable.message}",
+                            throwable,
+                        ),
+                    ),
+                )
+                null
+            }
+    }
+
+    private fun processResponse(
+        future: CompletableFuture<Result<GeneratorResult>>,
+        generatorResult: Any
+    ) {
+        val generatedFilesResult = extractGeneratedFiles(generatorResult)
+        if (generatedFilesResult.isFailure) {
+            future.complete(Result.failure(generatedFilesResult.exceptionOrNull()!!))
+            return
+        }
+
+        val generatedFiles = generatedFilesResult.getOrNull()!!
+        if (generatedFiles.isEmpty()) {
+            future.complete(Result.success(GeneratorResult(listOf())))
+        } else {
+            future.complete(Result.success(GeneratorResult(generatedFiles)))
         }
     }
 
