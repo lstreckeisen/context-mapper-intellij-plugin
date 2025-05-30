@@ -1,6 +1,7 @@
 package org.contextmapper.intellij.actions.generators
 
 import com.intellij.openapi.project.Project
+import com.redhat.devtools.lsp4ij.LanguageServerItem
 import com.redhat.devtools.lsp4ij.LanguageServerManager
 import com.redhat.devtools.lsp4ij.commands.CommandExecutor
 import com.redhat.devtools.lsp4ij.settings.UserDefinedLanguageServerSettings
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class ContextMapperGeneratorTest() {
     private val command = Command("TestCommand", "cmd.id")
@@ -35,7 +38,11 @@ class ContextMapperGeneratorTest() {
             mockk(relaxed = true) {
                 every { getLanguageServer(any()) } returns
                     mockk {
-                        every { join() } returns mockk(relaxed = true)
+                        val actionSlot = slot<Consumer<LanguageServerItem?>>()
+                        every { thenAcceptAsync(capture(actionSlot)) } answers {
+                            actionSlot.captured.accept(mockk(relaxed = true))
+                            CompletableFuture.completedFuture(null)
+                        }
                     }
             }
         project =
@@ -55,7 +62,11 @@ class ContextMapperGeneratorTest() {
             mockk<CommandExecutor.LSPCommandResponse> {
                 every { response } returns
                     mockk {
-                        every { join() } returns listOf("diagram.puml")
+                        val actionSlot = slot<Consumer<Any>>()
+                        every { thenAcceptAsync(capture(actionSlot)) } answers {
+                            actionSlot.captured.accept(listOf("diagram.puml"))
+                            CompletableFuture.completedFuture(null)
+                        }
                     }
             }
 
@@ -74,7 +85,11 @@ class ContextMapperGeneratorTest() {
             mockk<CommandExecutor.LSPCommandResponse> {
                 every { response } returns
                     mockk {
-                        every { join() } returns listOf<String>()
+                        val actionSlot = slot<Consumer<Any>>()
+                        every { thenAcceptAsync(capture(actionSlot)) } answers {
+                            actionSlot.captured.accept(listOf<String>())
+                            CompletableFuture.completedFuture(null)
+                        }
                     }
             }
 
@@ -93,7 +108,10 @@ class ContextMapperGeneratorTest() {
             mockk<CommandExecutor.LSPCommandResponse> {
                 every { response } returns
                     mockk {
-                        every { join() } throws Exception("Test Exception")
+                        val actionSlot = slot<Consumer<Any>>()
+                        every { thenAcceptAsync(capture(actionSlot)) } answers {
+                            CompletableFuture.failedFuture(Exception("Test Exception"))
+                        }
                     }
             }
 
@@ -128,7 +146,11 @@ class ContextMapperGeneratorTest() {
             mockk<CommandExecutor.LSPCommandResponse> {
                 every { response } returns
                     mockk {
-                        every { join() } returns mockk<ResponseErrorException>()
+                        val actionSlot = slot<Consumer<Any>>()
+                        every { thenAcceptAsync(capture(actionSlot)) } answers {
+                            actionSlot.captured.accept(mockk<ResponseErrorException>())
+                            CompletableFuture.completedFuture(null)
+                        }
                     }
             }
 
@@ -145,7 +167,10 @@ class ContextMapperGeneratorTest() {
     fun testGeneratorWithMissingLanguageServer() {
         every { languageServerManager.getLanguageServer(eq(CONTEXT_MAPPER_SERVER_ID)) } returns
             mockk {
-                every { join() } throws RuntimeException()
+                val actionSlot = slot<Consumer<LanguageServerItem?>>()
+                every { thenAcceptAsync(capture(actionSlot)) } answers {
+                    CompletableFuture.failedFuture(RuntimeException())
+                }
             }
 
         val result =
