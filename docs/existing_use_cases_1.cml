@@ -1,5 +1,5 @@
 UseCase UC1_CML_Editing {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = 
         "recognise" a "SyntaxError",
         "recognise" a "CmlKeyword",
@@ -16,7 +16,7 @@ UseCase UC1_CML_Editing {
 }
 
 UseCase UC2_CML_QuickFix {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = 
         "create" a "MissingBoundedContext",
         "split" a "UserStory"
@@ -24,13 +24,13 @@ UseCase UC2_CML_QuickFix {
 }
 
 UseCase UC3_CML_Generate_ContextMap {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = "generate" a "VisualContextMap"
     benefit = "I am able to create a context map diagram from my CML context map"
 }
 
 UseCase UC4_CML_Generate_PlantUML {
-    actor = "ContextMapper User"
+    actor = "Context Mapper User"
     interactions = "generate" a "PlantUmlDiagram"
     benefit = "I am able to create visual representations of my CML definitions"
 }
