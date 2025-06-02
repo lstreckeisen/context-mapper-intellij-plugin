@@ -5,10 +5,10 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>ContextMapper</name>
+    <name>Context Mapper</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://contextmapper.org">ContextMapper</vendor>
+    <vendor url="https://contextmapper.org">Context Mapper</vendor>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -53,7 +53,7 @@
                 <![CDATA[
                 <p>Context Mapper Language Server</p>
                 <p>
-                    The Context Mapper Language Server provides support for the ContextMapper DSL in IntelliJ IDEA.
+                    The Context Mapper Language Server provides support for the Context Mapper DSL in IntelliJ IDEA.
                 </p>
                 ]]>
             </description>
@@ -68,7 +68,7 @@
 
     <actions>
         <group id="org.contextmapper.editorActions"
-               text="ContextMapper"
+               text="Context Mapper"
                popup="true"
         >
             <add-to-group group-id="EditorPopupMenu2"
