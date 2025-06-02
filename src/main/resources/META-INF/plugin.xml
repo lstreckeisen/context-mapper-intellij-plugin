@@ -51,9 +51,9 @@
                 factoryClass="org.contextmapper.intellij.lsp4ij.server.ContextMapperDslServerFactory">
             <description>
                 <![CDATA[
-                <p>ContextMapper Language Server</p>
+                <p>Context Mapper Language Server</p>
                 <p>
-                    The ContextMapper Language Server provides support for the ContextMapper DSL in IntelliJ IDEA.
+                    The Context Mapper Language Server provides support for the ContextMapper DSL in IntelliJ IDEA.
                 </p>
                 ]]>
             </description>
