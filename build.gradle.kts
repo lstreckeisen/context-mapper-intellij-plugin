@@ -43,7 +43,7 @@ intellijPlatform {
 
     pluginConfiguration {
         id = "org.contextmapper.intellij-plugin"
-        name = "ContextMapper"
+        name = "Context Mapper"
         version = "0.3.1"
 
         productDescriptor {
@@ -55,7 +55,7 @@ intellijPlatform {
         }
 
         vendor {
-            name = "ContextMapper"
+            name = "Context Mapper"
             url = "https://contextmapper.org"
         }
 
@@ -100,7 +100,7 @@ tasks {
     }
 
     val npmInstall by registering(Exec::class) {
-        description = "Downloads the ContextMapper Language Server NPM package"
+        description = "Downloads the Context Mapper Language Server NPM package"
         group = LifecycleBasePlugin.BUILD_GROUP
         workingDir(layout.projectDirectory.dir("lsp"))
         val installCommand = "npm install"
@@ -113,7 +113,7 @@ tasks {
     }
 
     val copyLanguageServer by registering(Copy::class) {
-        description = "Extracts and copies the ContextMapper Language Server to the build directory"
+        description = "Extracts and copies the Context Mapper Language Server to the build directory"
         group = LifecycleBasePlugin.BUILD_GROUP
         dependsOn(npmInstall)
 
