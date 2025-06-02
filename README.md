@@ -4,10 +4,10 @@
 
 > **_NOTE:_** This plugin is a proof of concept. It does not support all Context Mapper features yet.
 
-[ContextMapper](https://contextmapper.org/) is an open source tool providing a Domain-specific Language based on Domain-Driven Design (DDD) patterns for context mapping and service decomposition.
+[Context Mapper](https://contextmapper.org/) is an open source tool providing a Domain-specific Language based on Domain-Driven Design (DDD) patterns for context mapping and service decomposition.
 
 ## System Requirements
-To use the ContextMapper IntelliJ plugin you need the following tools (besides IntelliJ and our extension) installed locally:
+To use the Context Mapper IntelliJ plugin you need the following tools (besides IntelliJ and our extension) installed locally:
 
 * [Oracle Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or [OpenJDK](https://openjdk.java.net/) (JRE 11 or newer)
 * [Node.js](https://nodejs.org/en/download) (v22)
