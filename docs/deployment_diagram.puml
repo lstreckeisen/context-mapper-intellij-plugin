@@ -1,0 +1,18 @@
+@startuml
+
+node "Developer Machine" <<device>> {
+
+    node "IntelliJ IDEA" <<execution environment>> {
+        artifact "Context Mapper IntelliJ Plugin" <<plugin>> {
+            artifact "Bundled Language Server"
+        }
+    }
+
+    process "Language Server Process" {
+    }
+
+    "Context Mapper IntelliJ Plugin" <--> "Language Server Process" : LSP
+    "Bundled Language Server" --> "Language Server Process" : launched as
+}
+
+@enduml
