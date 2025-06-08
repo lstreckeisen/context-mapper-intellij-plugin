@@ -42,3 +42,9 @@ UseCase U10_CML_Validators {
     interactions = "validate" a "CMLFile"
     benefit = "I am able to validate my CML files for their semantic correctness"
 }
+
+UseCase U11_CML_ArchUnit {
+    actor = "Context Mapper User"
+    interactions = "validate" a "CodeBase"
+    benefit = "I am able to validate my codebase against my CML model"
+}
