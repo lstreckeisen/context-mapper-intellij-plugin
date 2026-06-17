@@ -84,6 +84,12 @@ intellijPlatform {
     publishing {
         token = System.getenv("PUBLISH_TOKEN")
     }
+
+    pluginVerification {
+        ides {
+            ide(providers.provider { "IU" }, providers.gradleProperty("intellijVerifierIdeVersion").orElse("2026.1.3"))
+        }
+    }
 }
 
 kotlin {
