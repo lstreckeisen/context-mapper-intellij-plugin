@@ -59,7 +59,7 @@
             </description>
         </server>
 
-        <languageMapping language="Context Mapper DSL" serverId="cml-language-server" languageId="Context Mapper DSL"/>
+        <languageMapping language="Context Mapper DSL" serverId="cml-language-server" languageId="context-mapper-dsl"/>
 
         <semanticTokensColorsProvider serverId="cml-language-server"
                                       class="org.contextmapper.intellij.lsp4ij.syntaxhighlighting.ContextMapperDSLSemanticTokensColorProvider"
